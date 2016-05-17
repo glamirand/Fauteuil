@@ -23,7 +23,13 @@ If the server receives -2, it exits.
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <wiringPi.h>
+#include <iostream>
+#include <string>
+#include <thread>
+#include "steppermotor.h"
 
+using namespace std;
 
 void error( char *msg ) {
   perror(  msg );
@@ -55,10 +61,16 @@ int getData( int sockfd ) {
 }
 
 int main(int argc, char *argv[]) {
-     int sockfd, newsockfd, portno = 51717, clilen;
-     char buffer[256];
+    cout << "Demarrage de l'application" << endl;
+    wiringPiSetup () ;
+    StepperMotor sm1(0);
+    sm1.Enable();
+    sm1.Start();
+
+     int sockfd, newsockfd, portno = 8000, clilen;
+    // char buffer[256];
      struct sockaddr_in serv_addr, cli_addr;
-     int n;
+     //int n;
      int data;
 
      printf( "using port #%d\n", portno );
@@ -87,20 +99,20 @@ int main(int argc, char *argv[]) {
              //---- wait for a number from client ---
              data = getData( newsockfd );
              printf( "got %d\n", data );
-             if ( data < 0 )
-                break;
+             sm1.SetSpeed((int)data);
 
-             data = func( data );
+            // data = func( data );
 
              //--- send new data back ---
-             printf( "sending back %d\n", data );
-             sendData( newsockfd, data );
+            // printf( "sending back %d\n", data );
+            // sendData( newsockfd, data );
+
+             if (data == 0)
+             {
+                 break;
+             }
         }
         close( newsockfd );
-
-        //--- if -2 sent by client, we can quit ---
-        if ( data == -2 )
-          break;
      }
      return 0;
 }

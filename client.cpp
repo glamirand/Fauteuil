@@ -22,6 +22,8 @@ This code is compiled and run on the Macbook laptop as follows:
 #include <errno.h>
 #include <arpa/inet.h>
 
+using namespace std;
+
 void error(char *msg) {
     perror(msg);
     exit(0);
@@ -49,12 +51,12 @@ int getData( int sockfd ) {
 
 int main(int argc, char *argv[])
 {
-    int sockfd, portno = 51717, n;
-    char serverIp[] = "192.168.3.58";
+    int sockfd, portno = 8000,n,data;
+    char serverIp[] = "raspberrypi";
     struct sockaddr_in serv_addr;
     struct hostent *server;
-    char buffer[256];
-    int data;
+   // char buffer[256];
+   // int data;
 
     if (argc < 3) {
       // error( const_cast<char *>( "usage myClient2 hostname port\n" ) );
@@ -74,12 +76,13 @@ int main(int argc, char *argv[])
     if ( connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0)
         error( const_cast<char *>( "ERROR connecting") );
 
-    for ( n = 0; n < 1000; n++ ) {
+    for (n = 10; n < 12000; n+=5 ) {
       sendData( sockfd, n );
       data = getData( sockfd );
-      printf("%d ->  %d\n",n, data );
+     // printf("%d ->  %d\n",n, data );
+    //  usleep(500);
     }
-    sendData( sockfd, -2 );
+   // sendData( sockfd, -2 );
 
     close( sockfd );
     return 0;
