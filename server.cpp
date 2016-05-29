@@ -36,6 +36,8 @@ void error( char *msg ) {
   exit(1);
 }
 
+int Command[2];
+
 int func( int a ) {
    return 2 * a;
 }
@@ -50,17 +52,19 @@ void sendData( int sockfd, int x ) {
   buffer[n] = '\0';
 }
 
-int getData( int sockfd ) {
+string getData( int sockfd ) {
   char buffer[32];
   int n;
 
   if ( (n = read(sockfd,buffer,31) ) < 0 )
     error( const_cast<char *>( "ERROR reading from socket") );
   buffer[n] = '\0';
-  return atoi( buffer );
+  return  string(buffer);
 }
 
 int main(int argc, char *argv[]) {
+	Command[0] = 0;
+	Command[1] = 0;
     cout << "Demarrage de l'application" << endl;
     wiringPiSetup () ;
     StepperMotor sm1(0);
@@ -97,17 +101,33 @@ int main(int argc, char *argv[]) {
         printf( "opened new communication with client\n" );
         while ( 1 ) {
              //---- wait for a number from client ---
-             data = getData( newsockfd );
-             printf( "got %d\n", data );
-             sm1.SetSpeed((int)data);
+             string s = getData( newsockfd );
+			 string delimiter = ";";
 
+			 size_t pos = 0;
+			// string token;
+			 int cpt(0);
+			 while ((pos = s.find(delimiter)) != string::npos) {
+				// token = s.substr(0, pos);
+				// std::cout << token << std::endl;
+				 Command[cpt] = stoi(s.substr(0, pos));
+				 s.erase(0, pos + delimiter.length());
+			 }
+			// std::cout << s << std::endl;
+
+
+
+            // printf( "Data : %d\n", data );
+             sm1.SetSpeed((int)Command[0]);
+printf( "Command[0] : %d\n", Command[0]);
+printf( "Command[1] : %d\n", Command[1]);
             // data = func( data );
 
              //--- send new data back ---
             // printf( "sending back %d\n", data );
             // sendData( newsockfd, data );
 
-             if (data == 0)
+             if (Command[0] == 0)
              {
                  break;
              }
