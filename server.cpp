@@ -93,44 +93,43 @@ int main(int argc, char *argv[]) {
      listen(sockfd,5);
      clilen = sizeof(cli_addr);
 
+		string left = "";
+		string right = "";
+		string s = "";
+
      //--- infinite wait on a connection ---
      while ( 1 ) {
         printf( "waiting for new client...\n" );
         if ( ( newsockfd = accept( sockfd, (struct sockaddr *) &cli_addr, (socklen_t*) &clilen) ) < 0 )
             error( const_cast<char *>("ERROR on accept") );
         printf( "opened new communication with client\n" );
+
         while ( 1 ) {
              //---- wait for a number from client ---
-             string s = getData( newsockfd );
-			 string delimiter = ";";
+             s = getData( newsockfd );
+			  if (s.length() >= 8)	
+				  {
+			 left = s.substr(0, 4);
+			 right = s.substr(4, 4);
+				 
+			Command[0] = stoi(left);
+			Command[1] = stoi(right);
 
-			 size_t pos = 0;
-			// string token;
-			 int cpt(0);
-			 while ((pos = s.find(delimiter)) != string::npos) {
-				// token = s.substr(0, pos);
-				// std::cout << token << std::endl;
-				 Command[cpt] = stoi(s.substr(0, pos));
-				 s.erase(0, pos + delimiter.length());
-			 }
-			// std::cout << s << std::endl;
-
-
-
-            // printf( "Data : %d\n", data );
-             sm1.SetSpeed((int)Command[0]);
+             sm1.SetSpeed(Command[0]*120);
 printf( "Command[0] : %d\n", Command[0]);
 printf( "Command[1] : %d\n", Command[1]);
-            // data = func( data );
+ }
 
              //--- send new data back ---
+		//	data = 0;
             // printf( "sending back %d\n", data );
-            // sendData( newsockfd, data );
+           //  sendData( newsockfd, data );
 
-             if (Command[0] == 0)
-             {
-                 break;
-             }
+             //if (Command[0] == 0)
+             //{
+             //    break;
+             //}
+break;
         }
         close( newsockfd );
      }
