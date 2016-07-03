@@ -67,9 +67,12 @@ int main(int argc, char *argv[]) {
 	Command[1] = 0;
     cout << "Demarrage de l'application" << endl;
     wiringPiSetup () ;
-    StepperMotor sm1(0);
+    StepperMotor sm1(15,16,1);
     sm1.Enable();
     sm1.Start();
+	StepperMotor sm2(0, 2, 3);
+	sm2.Enable();
+	sm2.Start();
 
      int sockfd, newsockfd, portno = 8000, clilen;
     // char buffer[256];
