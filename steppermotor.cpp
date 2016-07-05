@@ -102,7 +102,7 @@ if (StepperMotor::m_Enabled == false)
 {
     if (StepperMotor::m_EnablePinNumber >=0)
 {
-    digitalWrite (StepperMotor::m_EnablePinNumber, HIGH) ;
+    digitalWrite (StepperMotor::m_EnablePinNumber, LOW) ;
 }
     StepperMotor::m_Enabled = true;
 }

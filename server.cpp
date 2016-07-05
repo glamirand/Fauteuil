@@ -119,6 +119,7 @@ int main(int argc, char *argv[]) {
 			Command[1] = stoi(right);
 
              sm1.SetSpeed(Command[0]*120);
+			 sm2.SetSpeed(Command[1] * 120);
 printf( "Command[0] : %d\n", Command[0]);
 printf( "Command[1] : %d\n", Command[1]);
  }
